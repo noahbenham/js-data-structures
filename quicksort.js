@@ -9,34 +9,35 @@
 
 const input = Array.from({length: 10}, () => Math.floor(Math.random() * 40));
 
-function quickSort(arr, l, r) {
-  console.log(`Left is ${l}, right is ${r}`);
-  if (l >= r) return;
+function quickSort(arr, left, right) {
+  const index = partition(arr, left, right);
 
-  const pivot = arr[(l + r) / 2];
-  const dividingPoint = partition(arr, l, r, pivot);
-  quickSort(arr, l, dividingPoint - 1);
-  quickSort(arr, dividingPoint, r);
+  if (left < index - 1) { // Sort left half
+    quickSort(arr, left, index - 1);
+  }
+  if (index < right) { // Sort right half
+    quickSort(arr, index, right);
+  }
   return arr;
 }
 
-function partition(arr, l, r, pivot) {
-  while(l <= r) {
-    while (arr[l] < pivot) {
-      l++;
-    }
-    while (arr[r] > pivot) {
-      r--;
-    }
+function partition(arr, left, right) {
+  const pivot = arr[(left + right) / 2];
 
-    if (l <= r) {
-      swap(arr, l, r);
-      l++;
-      r--;
+  while (left <= right) {
+    // Find elements on left that should be on right
+    while (arr[left] < pivot) left++;
+
+    // Find elements on right that should be on left
+    while (arr[right] > pivot) right--;
+
+    if (left <= right) {
+      swap(arr, left, right);
+      left++;
+      right--;
     }
   }
-
-  return l;
+  return left;
 }
 
 function swap(arr, l, r) {
